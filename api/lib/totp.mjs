@@ -1,4 +1,4 @@
-import { createHmac, randomBytes } from 'node:crypto';
+import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
 // TOTP da RFC 6238 (contrato 4.4): HMAC-SHA-1, 6 dígitos, passos de 30 s, aceitando o passo anterior e o seguinte.
 // O passo aceito volta para quem chama, que o guarda em users.totp_ultimo_passo: o mesmo código não entra duas vezes.
@@ -29,7 +29,7 @@ export function conferir(segredo,codigo,now,ultimo=null) {
   const atual=passoDe(now);
   for(const passo of [atual,atual-1,atual+1]) {
     if(ultimo!=null&&passo<=Number(ultimo))continue;
-    if(codigoDe(segredo,passo)===codigo)return passo;
+    if(timingSafeEqual(Buffer.from(codigoDe(segredo,passo)),Buffer.from(String(codigo))))return passo;
   }
   return null;
 }

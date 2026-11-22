@@ -1134,8 +1134,8 @@ Todas exigem sessão, menos as do login (4.4). A coluna Ação é a de 3.1: `—
 | `POST /api/importacoes/:id/confirmar` | `importar` ⟳ | `{version}` | Importacao (`status: confirmada`) |
 | `DELETE /api/importacoes/:id` | `importar` | — | `{ok:true}`: descarta a prévia |
 | `GET /api/equipe` | `equipe` | — | `{itens: Membro[]}` (6.13) |
-| `POST /api/equipe` | `equipe` | `{email, nome, papel}` | `201 {membro, link, expira}`. E-mail que já está na equipe: `409`. |
-| `PATCH /api/equipe/:id` | `equipe` (⟳ para `papel`) | `{nome?, papel?, desativado?, version}` | Membro |
+| `POST /api/equipe` | `equipe` ⟳ | `{email, nome, papel}` | `201 {membro, link, expira}`. E-mail que já está na equipe: `409`. |
+| `PATCH /api/equipe/:id` | `equipe` (⟳ para `papel` e `desativado`) | `{nome?, papel?, desativado?, version}` | Membro |
 | `POST /api/equipe/:id/link-senha` | `equipe` ⟳ | `{}` | `{link, expira, tipo}`, com `tipo` igual a `convite` ou `senha` (4.2) |
 | `POST /api/equipe/:id/redefinir-2fa` | `equipe` ⟳ | `{version}` | Membro |
 | `GET /api/configuracoes` | `configuracoes` | — | Configurações (6.14) |

@@ -135,7 +135,8 @@ export async function createApp({db,origin='http://127.0.0.1:4184',siteOrigin=''
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const db=await openDB();await migrate(db);
   const origin=process.env.PUBLIC_ORIGIN||'http://127.0.0.1:4184';
-  if(process.env.NODE_ENV==='production'&&!origin.startsWith('https://'))throw new Error('Produção exige PUBLIC_ORIGIN HTTPS');
+  const localOrigin=/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(origin);
+  if((process.env.NODE_ENV==='production'||!localOrigin)&&!origin.startsWith('https://'))throw new Error('Produção exige PUBLIC_ORIGIN HTTPS');
   const logger=entry=>console.log(JSON.stringify(entry)),site=siteDoAmbiente(),fila=criarFila({db,site,logger});
   const server=await createApp({db,origin,siteOrigin:process.env.SITE_PUBLIC_ORIGIN||'',logger,site,fila});
   server.listen(Number(process.env.PORT||4184),process.env.HOST||'127.0.0.1',()=>console.log(`Gestão Nexus: ${origin}`));

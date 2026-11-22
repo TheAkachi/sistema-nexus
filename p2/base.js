@@ -23,7 +23,7 @@ export function reais(c) {
 }
 export const dia=v=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||'');return m?`${m[3]}/${m[2]}/${m[1]}`:'';};
 // Caminho interno para voltar (o ?volta= dos links), nunca outro site.
-export const interno=v=>typeof v==='string'&&/^\/(?![/\\])[^\s\\]*$/.test(v)&&!v.startsWith('/entrar')?v:'';
+export const interno=v=>typeof v==='string'&&/^\/(?![/\\])[^\s\\\x00-\x1f\x7f]*$/.test(v)&&!v.startsWith('/entrar')?v:'';
 
 // Confirmação de identidade: abre o diálogo e resolve true quando a senha ou o código foram aceitos.
 function confirmarIdentidade() {
@@ -74,14 +74,10 @@ export async function chamar(metodo,url,corpo,{confirmar=true,tipo='application/
   return {ok:r.ok,status:r.status,dados,erro:dados?.erro||PADRAO[r.status]||PADRAO[500],campo:dados?.campo||''};
 }
 
-// Saída da página: depois dela, o aviso de "formulário não salvo" não dispara.
-let saindo=false;
-export const estaSaindo=()=>saindo;
-export function sair(url){saindo=true;location.assign(url);}
+export function sair(url){location.assign(url);}
 // Vai para a página (ou recarrega a mesma) com a confirmação para mostrar no topo depois do carregamento.
 // alvo: o id do elemento para onde a página volta depois de carregar (a linha mexida da prévia, por exemplo).
 export function irPara(url,mensagem,{erro=false,alvo=""}={}) {
-  saindo=true;
   try{if(mensagem)sessionStorage.setItem(CHAVE,JSON.stringify({mensagem,erro,alvo}));}catch{/* sem armazenamento: segue sem o aviso */}
   const destino=new URL(url,location.href);destino.hash='';
   if(destino.href===location.href.replace(/#.*$/,''))location.reload();else location.assign(destino.href);

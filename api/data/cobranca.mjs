@@ -40,7 +40,7 @@ async function ativas(db,cx) {
 }
 const JANELAS={vencidas:s=>s._dias<0,7:s=>s._dias>=0&&s._dias<=7,15:s=>s._dias>=0&&s._dias<=15,30:s=>s._dias>=0&&s._dias<=30,lembrar:s=>s._lembrar};
 export async function listarRenovacoes(db,url,cx,{podeCobrar}) {
-  const j=filtro(url,'janela'),janela=JANELAS[j]?j:'vencidas',todas=await ativas(db,cx);
+  const j=filtro(url,'janela'),janela=Object.hasOwn(JANELAS,j)?j:'vencidas',todas=await ativas(db,cx);
   const contagem={vencidas:todas.filter(JANELAS.vencidas).length,ate7:todas.filter(JANELAS[7]).length,ate15:todas.filter(JANELAS[15]).length,ate30:todas.filter(JANELAS[30]).length,
     lembrar:todas.filter(JANELAS.lembrar).length};
   const da=todas.filter(JANELAS[janela]),frases=await frasesPara(db,da,cx,{podeCobrar});

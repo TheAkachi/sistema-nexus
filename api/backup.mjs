@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, createCipheriv, createDecipheriv, createHash } from 'node:crypto';
+import { randomBytes, scryptSync, createCipheriv, createDecipheriv, createHash, timingSafeEqual } from 'node:crypto';
 
 // Backup criptografado (AES-256-GCM, chave derivada da BACKUP_PASSPHRASE), no mesmo formato do site (api/backup.mjs).
 // TABELAS: o que entra, na ordem de restauração (chaves estrangeiras). Cada módulo novo acrescenta as suas tabelas aqui.
@@ -34,10 +34,14 @@ export async function backup(db,passphrase) {
 }
 export async function restore(db,archive,passphrase) {
   if(archive.format!==1 || archive.algorithm!=='aes-256-gcm') throw new Error('Formato não suportado');
+  if(!/^[0-9a-f]{32}$/i.test(archive.salt||'')||!/^[0-9a-f]{24}$/i.test(archive.iv||'')||!/^[0-9a-f]{32}$/i.test(archive.tag||'')||!/^[0-9a-f]{64}$/i.test(archive.sha256||''))
+    throw new Error('Parâmetros criptográficos inválidos');
   const encrypted=Buffer.from(archive.data,'base64');
-  if(createHash('sha256').update(encrypted).digest('hex')!==archive.sha256) throw new Error('Checksum inválido');
+  const hashReal=createHash('sha256').update(encrypted).digest();
+  const hashArq=Buffer.from(archive.sha256,'hex');
+  if(hashReal.length!==hashArq.length||!timingSafeEqual(hashReal,hashArq)) throw new Error('Checksum inválido');
   const key=scryptSync(passphrase,Buffer.from(archive.salt,'hex'),32);
-  const decipher=createDecipheriv('aes-256-gcm',key,Buffer.from(archive.iv,'hex')); decipher.setAuthTag(Buffer.from(archive.tag,'hex'));
+  const decipher=createDecipheriv('aes-256-gcm',key,Buffer.from(archive.iv,'hex'),{authTagLength:16}); decipher.setAuthTag(Buffer.from(archive.tag,'hex'));
   const payload=JSON.parse(Buffer.concat([decipher.update(encrypted),decipher.final()]).toString());
   const migrations=(await db.query('SELECT name,sha256 FROM schema_migrations ORDER BY name')).rows;
   if(JSON.stringify(migrations)!==JSON.stringify(payload.migrations)) throw new Error('Versão de schema incompatível');
@@ -48,7 +52,7 @@ export async function restore(db,archive,passphrase) {
       const allowed=(await tx.query('SELECT column_name FROM information_schema.columns WHERE table_schema=$1 AND table_name=$2',['public',table])).rows.map(x=>x.column_name);
       if(!Array.isArray(payload.data[table])) throw new Error('Tabela ausente');
       for(const source of payload.data[table]) {
-        const row=table==='users'?{...source,password_hash:RESTORED_PASSWORD,totp_ativo:false}:source;
+        const row=table==='users'?{...source,password_hash:RESTORED_PASSWORD,totp_ativo:false,totp_secret:null,totp_ultimo_passo:null}:source;
         const keys=Object.keys(row);
         if(!keys.length || keys.some(k=>!allowed.includes(k))) throw new Error('Coluna desconhecida');
         await tx.query(`INSERT INTO ${table}(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')})`,keys.map(k=>(row[k] && typeof row[k]==='object')?JSON.stringify(row[k]):row[k]));

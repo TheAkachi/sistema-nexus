@@ -89,10 +89,10 @@ function lerLinha(tipo,idx,celulas,n,{planos,ordem}) {
   if(!empresaNome)return comErro(tipo==='edirectory'?'Falta o título do anúncio.':'Falta o nome da empresa.');
   const planoBruto=v('plano'),plano=planoBruto?planos.find(p=>p.id===planoBruto||nomeEmpresa(p.nome)===nomeEmpresa(planoBruto))||null:null;
   if(!planoBruto)avisos.push('Sem plano no arquivo.');else if(!plano)avisos.push(`Plano ${planoBruto} não existe no guia.`);
-  const cicloBruto=v('ciclo'),ciclo=CICLOS[nomeColuna(cicloBruto)]||'mensal';
-  if(cicloBruto&&!CICLOS[nomeColuna(cicloBruto)])avisos.push(`Ciclo ${cicloBruto} desconhecido: ficou mensal.`);
-  const situacaoBruta=v('status'),status=situacaoBruta?SITUACOES[nomeColuna(situacaoBruta)]||'ativa':'ativa';
-  if(situacaoBruta&&!SITUACOES[nomeColuna(situacaoBruta)])avisos.push(`Situação ${situacaoBruta} desconhecida: ficou ativa.`);
+  const cicloBruto=v('ciclo'),cicloChave=nomeColuna(cicloBruto),ciclo=Object.hasOwn(CICLOS,cicloChave)?CICLOS[cicloChave]:'mensal';
+  if(cicloBruto&&!Object.hasOwn(CICLOS,cicloChave))avisos.push(`Ciclo ${cicloBruto} desconhecido: ficou mensal.`);
+  const situacaoBruta=v('status'),situacaoChave=nomeColuna(situacaoBruta),status=situacaoBruta?(Object.hasOwn(SITUACOES,situacaoChave)?SITUACOES[situacaoChave]:'ativa'):'ativa';
+  if(situacaoBruta&&!Object.hasOwn(SITUACOES,situacaoChave))avisos.push(`Situação ${situacaoBruta} desconhecida: ficou ativa.`);
   const inicioBruto=v('inicio'),vencimentoBruto=v('vencimento');
   let inicio=inicioBruto?paraDia(inicioBruto,ordem):null,venceEm=vencimentoBruto?paraDia(vencimentoBruto,ordem):null,valor=centavos(v('valor'));
   if(tipo==='edirectory') {

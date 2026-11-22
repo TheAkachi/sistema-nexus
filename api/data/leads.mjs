@@ -10,7 +10,6 @@ import { whatsappDe, inserirCliente } from './clientes.mjs';
 // texto da mensagem, as respostas, a origem e a hora; o nome e o WhatsApp a equipe completa quando a pessoa escreve.
 // [SEG] A base legal, a guarda, o lead perdido e o pedido de exclusão esperam a revisão de segurança (14.9).
 export const leadsDoAmbiente=(valor=process.env.LEADS_LIGADOS)=>valor==='1';
-export const SITUACOES_LEAD=['novo','em-conversa','proposta','cliente','perdido'];
 const CODIGO=/^[ACDEFHJKMNPRTUVWXY3479]{4,5}$/,GUARDA_SITE_DIAS=30;
 // [SEG] 14.2 e item 8 de 14.9: as tabelas novas não estão nem em TABELAS nem em FORA do api/backup.mjs (do colaborador) até a
 // revisão decidir. Hoje o backup não as leva; restaurado o banco, a próxima leitura traz de novo os pedidos que o site ainda tem.

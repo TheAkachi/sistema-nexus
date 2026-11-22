@@ -24,7 +24,7 @@ export const MOTIVOS=['expirou','saiu','senha-definida'];
 // next: só caminho interno, sem "//" nem "\", e nunca de volta ao próprio Entrar.
 export function proximo(v) {
   const s=typeof v==='string'?v:'';
-  return s.length<=300&&/^\/(?![/\\])[^\s\\]*$/.test(s)&&!/^\/entrar(\/|\?|$)/.test(s)?s:'';
+  return s.length<=300&&/^\/(?![/\\])[^\s\\\x00-\x1f\x7f]*$/.test(s)&&!/^\/entrar(\/|\?|$)/.test(s)?s:'';
 }
 // modulos (v0.13.0): os módulos que ligam por chave; interessados só com LEADS_LIGADOS e a ação clientes (14.5).
 export const moldura=(s,{tela,filtros={},dados=null,avisos=[],leads=false})=>

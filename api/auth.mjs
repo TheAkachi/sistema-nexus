@@ -15,7 +15,7 @@ export const validEmail=v=>typeof v==='string'&&v.length<=254&&/^[^\s@]+@[^\s@]+
 export const validPassword=v=>typeof v==='string'&&v.length>=12&&v.length<=128;
 export const isDemoEmail=v=>typeof v==='string'&&/@nexus\.demo$/i.test(v.trim());
 export const DEMO_PROTECTED_MSG='Esta conta é protegida no ambiente de demonstração e não pode ser alterada ou desativada.';
-export const demoAtivo=(env=process.env)=>env.DEMO_MODE==='1'||env.NODE_ENV!=='production';
+export const demoAtivo=(env=process.env)=>env.DEMO_MODE==='1';
 
 // Senha com scrypt; os parâmetros ficam no próprio hash: scrypt$N$r$p$sal$chave (base64url).
 const PARAMS={N:32768,r:8,p:1};

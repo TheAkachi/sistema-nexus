@@ -1,6 +1,6 @@
 import { escape as e } from '../lib/html.mjs';
 import { moldura } from './moldura.mjs';
-import { numero, plural, dia, tempo, whatsapp, campo, texto, areaTexto, escolha, formulario, vazio, abas, paginacao, endereco, icone, sr } from './componentes.mjs';
+import { plural, dia, tempo, whatsapp, campo, texto, areaTexto, escolha, formulario, vazio, abas, paginacao, endereco, icone, sr } from './componentes.mjs';
 
 // Interessados (contrato 14, v0.13.0): os pedidos do cadastro do site, os leads, para a equipe completar, acompanhar e virar
 // cliente. O código é o que a pessoa manda no fim da mensagem do WhatsApp ("Pedido A7K3"), e é por ele que a busca acha o

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { fail } from '../lib/erros.mjs';
 import { audit, diff } from '../lib/auditoria.mjs';
-import { validEmail, hasPassword, endSessions, isDemoEmail, DEMO_PROTECTED_MSG } from '../auth.mjs';
+import { validEmail, hasPassword, endSessions, isDemoEmail, demoAtivo, DEMO_PROTECTED_MSG } from '../auth.mjs';
 import { PAPEIS } from '../permissoes.mjs';
 import { SEM_SENHA, emitirLink, linkDe, zerar2fa } from '../login.mjs';
 import { rejectExtra, needVersion, conflito, texto, iso, collator } from './comum.mjs';
@@ -27,6 +27,7 @@ export async function convidar(db,{p,session,ip,now=new Date(),origin}) {
   rejectExtra(p,['email','nome','papel']);
   const email=typeof p.email==='string'?p.email.trim().toLowerCase():'';
   if(!validEmail(email))throw fail('Informe um e-mail válido.',422,'email');
+  if(isDemoEmail(email))throw fail('O domínio @nexus.demo é reservado para contas demonstrativas.',422,'email');
   const nome=nomeDe(p.nome),papel=papelDe(p.papel);
   if((await db.query('SELECT 1 FROM users WHERE email=$1',[email])).rows.length)throw fail('Este e-mail já está na equipe.',409,'email');
   const id=randomUUID();
@@ -41,7 +42,7 @@ export async function convidar(db,{p,session,ip,now=new Date(),origin}) {
 export async function editarMembro(db,{id,p,session,ip,now=new Date()}) {
   return db.transaction(async tx=>{
     const u=await membro(tx,id,{lock:true});
-    if(isDemoEmail(u.email))throw fail(DEMO_PROTECTED_MSG,403);
+    if(demoAtivo()&&isDemoEmail(u.email))throw fail(DEMO_PROTECTED_MSG,403);
     rejectExtra(p,['nome','papel','desativado','version']);const version=needVersion(p);
     if(id===session.user_id&&p.papel!==undefined&&p.papel!==u.papel)throw fail('Você não pode mudar o próprio papel.',422,'papel');
     if(id===session.user_id&&p.desativado===true)throw fail('Você não pode se desativar.',422,'desativado');
@@ -62,7 +63,7 @@ export async function editarMembro(db,{id,p,session,ip,now=new Date()}) {
 
 export async function gerarLink(db,{id,session,ip,now=new Date(),origin}) {
   const u=await membro(db,id);
-  if(isDemoEmail(u.email))throw fail(DEMO_PROTECTED_MSG,403);
+  if(demoAtivo()&&isDemoEmail(u.email))throw fail(DEMO_PROTECTED_MSG,403);
   if(u.desativado)throw fail('Reative a conta antes de gerar o link.',422);
   const {value,expires,kind}=await emitirLink(db,{userId:id,createdBy:session.user_id,now});
   await audit(db,{actor:session.user_id,action:'link_senha_gerado',type:'usuario',resource:id,after:{tipo:kind},ip});
@@ -72,7 +73,7 @@ export async function gerarLink(db,{id,session,ip,now=new Date(),origin}) {
 export async function redefinir2fa(db,{id,p,session,ip,now=new Date()}) {
   return db.transaction(async tx=>{
     const u=await membro(tx,id,{lock:true});
-    if(isDemoEmail(u.email))throw fail(DEMO_PROTECTED_MSG,403);
+    if(demoAtivo()&&isDemoEmail(u.email))throw fail(DEMO_PROTECTED_MSG,403);
     rejectExtra(p,['version']);const version=needVersion(p);
     if(id===session.user_id)throw fail('Peça a outro admin ou use o CLI para redefinir o seu 2FA.',422);
     if(u.version!==version)throw conflito();

@@ -33,7 +33,13 @@ Requisitos: **Node.js 22+** (usa PGlite embarcado automaticamente em `.runtime/p
 ```bash
 npm install
 npm run db:seed
-npm start
+DEMO_MODE=1 LEADS_LIGADOS=1 npm start
+```
+
+No PowerShell (Windows):
+
+```powershell
+$env:DEMO_MODE='1'; $env:LEADS_LIGADOS='1'; npm start
 ```
 
 Abra **http://127.0.0.1:4184/entrar** no navegador.

@@ -9,9 +9,11 @@ export function chaveDe(hex) {
 }
 // Fora de produção, sem TOTP_KEY, vale esta chave fixa: o 2FA local não se perde a cada reinício (contrato 11).
 const DESENVOLVIMENTO='67657374616f2d6e657875732d646573656e766f6c76696d656e746f2d303031';
+const ehLocal=o=>!o||/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(o);
 export function chaveDoAmbiente(env=process.env,avisar=console.warn) {
   if(env.TOTP_KEY)return chaveDe(env.TOTP_KEY);
-  if(env.NODE_ENV==='production')throw new Error('Produção exige TOTP_KEY (32 bytes em hex).');
+  const exigeChave=env.NODE_ENV==='production'||(Boolean(env.DATABASE_URL)&&env.NODE_ENV!=='test')||!ehLocal(env.PUBLIC_ORIGIN);
+  if(exigeChave)throw new Error('Produção exige TOTP_KEY (32 bytes em hex).');
   avisar('TOTP_KEY ausente: usando a chave fixa de desenvolvimento. Nunca use assim em produção.');
   return chaveDe(DESENVOLVIMENTO);
 }

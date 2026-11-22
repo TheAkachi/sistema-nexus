@@ -1,6 +1,6 @@
 import { escape as e } from '../lib/html.mjs';
 import { moldura } from './moldura.mjs';
-import { instante, tempo, whatsapp, campo, texto, areaTexto, escolha, formulario, vazio, icone, sr, PAPEL } from './componentes.mjs';
+import { tempo, whatsapp, campo, texto, areaTexto, escolha, formulario, vazio, icone, sr, PAPEL } from './componentes.mjs';
 
 // Administração (contrato 6.13, 6.14, 7.3 e 7.6): a Equipe e as Configurações. Mudar o papel, gerar o link de senha,
 // redefinir o 2FA e mudar a chave Pix pedem a confirmação de identidade (4.6), que o base.js abre quando a API pede.

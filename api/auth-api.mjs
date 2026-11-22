@@ -3,7 +3,7 @@ import { audit } from './lib/auditoria.mjs';
 import { rota } from './rotas.mjs';
 import { rejectExtra } from './data/comum.mjs';
 import { podeDe } from './permissoes.mjs';
-import { sessionCookie, sameSecret, digest, cookieValue, isDemoEmail, demoAtivo, verifyPassword, newSession, limit } from './auth.mjs';
+import { sessionCookie, sameSecret, digest, cookieValue, isDemoEmail, demoAtivo, verifyPassword, newSession, limit, hit, peek, clear, DUMMY } from './auth.mjs';
 import { COOKIE_LOGIN, LOGIN_MS, entrar, conferirCodigo, ativar2fa, confirmar, definirSenha } from './login.mjs';
 
 // APIs do login (contrato 4.4 e 7.1). O cookie gestao_login vale só entre a senha e o código; o da sessão nasce no fim.
@@ -25,10 +25,19 @@ export const rotasAuth=[
     const p=await ctx.body();rejectExtra(p,['email','senha']);
     const mail=typeof p.email==='string'?p.email.trim().toLowerCase():'';
     if(demoAtivo()&&isDemoEmail(mail)) {
-      await limit(ctx.db,`login:ip:${ctx.ip}`,20,15*60000,ctx.now);
+      await limit(ctx.db,`login-ip:${ctx.ip}`,20,15*60000,ctx.now);
+      if(await peek(ctx.db,`login-conta:${mail}`,ctx.now)>=5){
+        await audit(ctx.db,{action:'login_bloqueado',type:'usuario',resource:mail,ip:ctx.ip});
+        throw fail('Muitas tentativas. Tente de novo em 15 minutos.',429);
+      }
       const u=(await ctx.db.query('SELECT id,email,password_hash,desativado,totp_ativo FROM users WHERE email=$1',[mail])).rows[0];
-      const ok=u&&!u.desativado&&u.totp_ativo&&(await verifyPassword(p.senha,u.password_hash)).ok;
-      if(!ok)throw fail('E-mail ou senha incorretos.',401);
+      const v=await verifyPassword(p.senha,u?.password_hash||DUMMY);
+      if(!u||u.desativado||!u.totp_ativo||!v.ok){
+        await hit(ctx.db,`login-conta:${mail}`,15*60000,ctx.now);
+        await audit(ctx.db,{actor:u?.id||null,action:'login_falha',type:'usuario',resource:u?.id||mail,ip:ctx.ip});
+        throw fail('E-mail ou senha incorretos.',401);
+      }
+      await clear(ctx.db,`login-conta:${mail}`);
       const s=await newSession(ctx.db,u.id,{userAgent:ctx.req.headers['user-agent'],now:ctx.now});
       await ctx.db.query('UPDATE users SET ultimo_acesso=$2 WHERE id=$1',[u.id,ctx.now.toISOString()]);
       await audit(ctx.db,{actor:u.id,action:'login_demo',type:'usuario',resource:u.id,ip:ctx.ip});
