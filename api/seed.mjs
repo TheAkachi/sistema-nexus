@@ -40,28 +40,28 @@ export async function seedDemo(db,{now=new Date(),chave=chaveDoAmbiente(process.
   ];
 
   const clientes=[
-    {id:'00000000-0000-4000-8000-00000000c001',nome:'Confeitaria Colombo',responsavel:'Beatriz Alencar',whatsapp:'5521988110001',email:'contato@colombo.nexus.demo',notas:'Parceiro fundador no Centro. Prefere contato comercial pela manhã.',
+    {id:'00000000-0000-4000-8000-00000000c001',nome:'Confeitaria Colombo',responsavel:'Beatriz Alencar',whatsapp:'5521900000001',email:'contato@colombo.nexus.demo',notas:'Parceiro fundador no Centro. Prefere contato comercial pela manhã.',
       empresa:{id:'confeitaria-colombo',nome:'Confeitaria Colombo',slug:'confeitaria-colombo',bairro:'Centro'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a001',plano:'plano-premium',planoNome:'Plano Curadoria Premium',valor:24900,ciclo:'mensal',inicio:somarMeses(hoje,-6),venceEm:somarDias(hoje,18),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c002',nome:'Bar do Mineiro',responsavel:'Diogo Tavares',whatsapp:'5521988110002',email:'financeiro@bardomineiro.nexus.demo',notas:'Unidade Santa Teresa com alto volume de cliques no mapa.',
+    {id:'00000000-0000-4000-8000-00000000c002',nome:'Bar do Mineiro',responsavel:'Diogo Tavares',whatsapp:'5521900000002',email:'financeiro@bardomineiro.nexus.demo',notas:'Unidade Santa Teresa com alto volume de cliques no mapa.',
       empresa:{id:'bar-do-mineiro',nome:'Bar do Mineiro',slug:'bar-do-mineiro',bairro:'Santa Teresa'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a002',plano:'plano-destaque',planoNome:'Plano Destaque',valor:14900,ciclo:'mensal',inicio:somarMeses(hoje,-5),venceEm:somarDias(hoje,-3),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c003',nome:'Livraria da Travessa · Ipanema',responsavel:'Mariana Peixoto',whatsapp:'5521988110003',email:'marketing@travessa.nexus.demo',notas:'Renovação trimestral combinada via Pix.',
+    {id:'00000000-0000-4000-8000-00000000c003',nome:'Livraria da Travessa · Ipanema',responsavel:'Mariana Peixoto',whatsapp:'5521900000003',email:'marketing@travessa.nexus.demo',notas:'Renovação trimestral combinada via Pix.',
       empresa:{id:'livraria-da-travessa-ipanema',nome:'Livraria da Travessa · Ipanema',slug:'livraria-da-travessa-ipanema',bairro:'Ipanema'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a003',plano:'plano-premium',planoNome:'Plano Curadoria Premium',valor:69900,ciclo:'trimestral',inicio:somarMeses(hoje,-4),venceEm:somarDias(hoje,1),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c004',nome:'Teatro Rival Petrobras',responsavel:'Rafael Bastos',whatsapp:'5521988110004',email:'producao@teatrorival.nexus.demo',notas:'Recebe relatório mensal de cliques e agenda cultural.',
+    {id:'00000000-0000-4000-8000-00000000c004',nome:'Teatro Rival Petrobras',responsavel:'Rafael Bastos',whatsapp:'5521900000004',email:'producao@teatrorival.nexus.demo',notas:'Recebe relatório mensal de cliques e agenda cultural.',
       empresa:{id:'teatro-rival-petrobras',nome:'Teatro Rival Petrobras',slug:'teatro-rival-petrobras',bairro:'Cinelândia'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a004',plano:'plano-destaque',planoNome:'Plano Destaque',valor:14900,ciclo:'mensal',inicio:somarMeses(hoje,-3),venceEm:somarDias(hoje,7),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c005',nome:'Aprazível Restaurante',responsavel:'Helena Duarte',whatsapp:'5521988110005',email:'reservas@aprazivel.nexus.demo',notas:'Plano anual com destaque editorial.',
+    {id:'00000000-0000-4000-8000-00000000c005',nome:'Aprazível Restaurante',responsavel:'Helena Duarte',whatsapp:'5521900000005',email:'reservas@aprazivel.nexus.demo',notas:'Plano anual com destaque editorial.',
       empresa:{id:'aprazivel',nome:'Aprazível',slug:'aprazivel',bairro:'Santa Teresa'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a005',plano:'plano-premium',planoNome:'Plano Curadoria Premium',valor:249000,ciclo:'anual',inicio:somarMeses(hoje,-8),venceEm:somarDias(hoje,120),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c006',nome:'Estação NET Botafogo',responsavel:'Bruno Salles',whatsapp:'5521988110006',email:'cinema@estacaonet.nexus.demo',notas:'Aguardando confirmação do financeiro após reajuste.',
+    {id:'00000000-0000-4000-8000-00000000c006',nome:'Estação NET Botafogo',responsavel:'Bruno Salles',whatsapp:'5521900000006',email:'cinema@estacaonet.nexus.demo',notas:'Aguardando confirmação do financeiro após reajuste.',
       empresa:{id:'estacao-net-botafogo',nome:'Estação NET Botafogo',slug:'estacao-net-botafogo',bairro:'Botafogo'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a006',plano:'plano-destaque',planoNome:'Plano Destaque',valor:14900,ciclo:'mensal',inicio:somarMeses(hoje,-4),venceEm:somarDias(hoje,-16),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c007',nome:'Café Lamas',responsavel:'Sérgio Nogueira',whatsapp:'5521988110007',email:'adm@cafelamas.nexus.demo',notas:'Vence em breve; lembrar 15 dias antes.',
+    {id:'00000000-0000-4000-8000-00000000c007',nome:'Café Lamas',responsavel:'Sérgio Nogueira',whatsapp:'5521900000007',email:'adm@cafelamas.nexus.demo',notas:'Vence em breve; lembrar 15 dias antes.',
       empresa:{id:'cafe-lamas',nome:'Café Lamas',slug:'cafe-lamas',bairro:'Flamengo'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a007',plano:'plano-basico',planoNome:'Plano Presença',valor:7900,ciclo:'mensal',inicio:somarMeses(hoje,-2),venceEm:somarDias(hoje,14),status:'ativa'}},
-    {id:'00000000-0000-4000-8000-00000000c008',nome:'Braseiro da Gávea',responsavel:'Fernanda Lemos',whatsapp:'5521988110008',email:'gerencia@braseiro.nexus.demo',notas:'Pausou campanha durante reforma do salão.',
+    {id:'00000000-0000-4000-8000-00000000c008',nome:'Braseiro da Gávea',responsavel:'Fernanda Lemos',whatsapp:'5521900000008',email:'gerencia@braseiro.nexus.demo',notas:'Pausou campanha durante reforma do salão.',
       empresa:{id:'braseiro-da-gavea',nome:'Braseiro da Gávea',slug:'braseiro-da-gavea',bairro:'Gávea'},
       assinatura:{id:'00000000-0000-4000-8000-00000000a008',plano:'plano-basico',planoNome:'Plano Presença',valor:7900,ciclo:'mensal',inicio:somarMeses(hoje,-5),venceEm:somarDias(hoje,-25),status:'suspensa',suspensaEm:somarDias(hoje,-10),motivo:'Reforma temporária do salão'}}
   ];
@@ -73,7 +73,7 @@ export async function seedDemo(db,{now=new Date(),chave=chaveDoAmbiente(process.
         VALUES($1,$2,$3,$4,$5,$6,true,$7) ON CONFLICT(email) DO NOTHING`,[id,email,nome,papel,passHash,secret,now.toISOString()]);
     }
 
-    await tx.query(`UPDATE settings SET chave_pix='financeiro@nexus.demo', whatsapp_atendimento='5521999990000',
+    await tx.query(`UPDATE settings SET chave_pix='financeiro@nexus.demo', whatsapp_atendimento='5521900000000',
       modelos_lembrete=$1 WHERE id=1 AND chave_pix=''`,[JSON.stringify({
       '7':'Olá, {responsavel}! Aqui é do Nexus. Passando para lembrar que a assinatura do plano {plano} da {empresa} {prazo} ({valor}). Qualquer dúvida, estamos por aqui!',
       '1':'Olá, {responsavel}! A assinatura da {empresa} no Nexus vence amanhã ({valor}). Para renovar, faça o Pix para {chave_pix} e envie o comprovante.'
@@ -162,9 +162,9 @@ export async function seedDemo(db,{now=new Date(),chave=chaveDoAmbiente(process.
 
     // Interessados (leads) vindos do guia Nexus.
     const leads=[
-      ['00000000-0000-4000-8000-00000000l001','NX7K4','Olá! Tenho interesse em destacar nosso café especial em Botafogo no guia Nexus.','plano-destaque','novo','Café Curto Botafogo','5521988220001','Enviar apresentação de planos'],
-      ['00000000-0000-4000-8000-00000000l002','PR9M3','Queremos anunciar a programação mensal da galeria no Nexus.','plano-premium','em-conversa','Galeria Laura Alvim','5521988220002','Agendar ligação na quarta-feira'],
-      ['00000000-0000-4000-8000-00000000l003','TR4V9','Gostaria de saber os valores do plano anual para bistrô na Lapa.','plano-basico','proposta','Bistrô da Lapa','5521988220003','Aguardar retorno da proposta']
+      ['00000000-0000-4000-8000-00000000l001','NX7K4','Olá! Tenho interesse em destacar nosso café especial em Botafogo no guia Nexus.','plano-destaque','novo','Café Curto Botafogo','5521900000011','Enviar apresentação de planos'],
+      ['00000000-0000-4000-8000-00000000l002','PR9M3','Queremos anunciar a programação mensal da galeria no Nexus.','plano-premium','em-conversa','Galeria Laura Alvim','5521900000012','Agendar ligação na quarta-feira'],
+      ['00000000-0000-4000-8000-00000000l003','TR4V9','Gostaria de saber os valores do plano anual para bistrô na Lapa.','plano-basico','proposta','Bistrô da Lapa','5521900000013','Aguardar retorno da proposta']
     ];
     for(const [id,codigo,texto,origem,situacao,nome,whatsapp,proximaAcao] of leads) {
       await tx.query(`INSERT INTO leads(id,codigo,texto,respostas,origem,pedido_em,recebido_em,nome,whatsapp,situacao,proxima_acao,proxima_em,atualizado_em)

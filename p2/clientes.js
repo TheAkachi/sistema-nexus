@@ -86,7 +86,7 @@ document.addEventListener('click',async ev=>{
   if(r.ok){
     if(envio)envio.textContent=`Relatório enviado agora${r.dados?.por?.nome?` por ${r.dados.por.nome}`:''}`;
     anunciar('Envio do relatório registrado.');
-  }else avisar(`A mensagem abriu no WhatsApp, mas o envio do relatório não foi registrado: ${r.erro}`,{erro:true,foco:false});
+  }else avisar(`A simulação da mensagem abriu, mas o envio do relatório não foi registrado: ${r.erro}`,{erro:true,foco:false});
 });
 
 // Cliente: criar, editar, encerrar e reabrir ----------------------------------------------------------------------------

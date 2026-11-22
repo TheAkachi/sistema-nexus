@@ -47,14 +47,46 @@ if(guardado){
   if(alvo){alvo.scrollIntoView({block:'center'});alvo.focus({preventScroll:true});}
 }
 
-// Cobrar (e Lembrar) no WhatsApp: o link abre na aba nova pelo próprio navegador (o toque é da pessoa) e, ao mesmo tempo,
-// o contato é registrado. Se o registro falhar, a mensagem já abriu do mesmo jeito, e a tela avisa.
+// Prévia local de mensagens do WhatsApp (portfólio): nunca encaminha para um número real.
+function abrirPreviaWhatsapp(href) {
+  let texto='';
+  try{texto=new URL(href).searchParams.get('text')||'';}catch{texto='';}
+  let dlg=$('dialog[data-whatsapp-demo]');
+  if(!dlg) {
+    dlg=document.createElement('dialog');
+    dlg.className='dialogo';dlg.dataset.whatsappDemo='';
+    dlg.setAttribute('aria-labelledby','zap-demo-titulo');
+    dlg.innerHTML='<div class="formulario"><h2 id="zap-demo-titulo">Simulação de envio pelo WhatsApp</h2><p class="dialogo-texto">No ambiente de portfólio, nenhuma mensagem é encaminhada para um número real. Abaixo está o texto gerado pelo sistema:</p><p class="balao" data-zap-texto></p><div class="form-acoes"><button type="button" class="botao" data-zap-copiar>Copiar mensagem</button><button type="button" class="botao secundario" data-zap-fechar>Fechar</button></div></div>';
+    document.body.append(dlg);
+    $('[data-zap-fechar]',dlg).addEventListener('click',()=>dlg.close());
+    $('[data-zap-copiar]',dlg).addEventListener('click',async ev=>{
+      const b=ev.currentTarget,msg=$('[data-zap-texto]',dlg).textContent||'';
+      try{await navigator.clipboard.writeText(msg);b.textContent='Mensagem copiada';anunciar('Mensagem copiada.');}
+      catch{b.textContent='Não foi possível copiar';}
+    });
+  }
+  const copiar=$('[data-zap-copiar]',dlg);
+  if(copiar)copiar.textContent='Copiar mensagem';
+  $('[data-zap-texto]',dlg).textContent=texto||'Mensagem pronta para envio demonstrativo.';
+  if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal();}
+  else dlg.setAttribute('open','');
+}
+
+// Intercepta qualquer link wa.me na aplicação (cobrança, lembrete, relatório ou convite) para simular localmente.
+document.addEventListener('click',ev=>{
+  const link=ev.target.closest('a[href^="https://wa.me/"]');
+  if(!link||ev.button>0)return;
+  ev.preventDefault();
+  abrirPreviaWhatsapp(link.href);
+});
+
+// Cobrar (e Lembrar) no WhatsApp: abre a simulação local e registra o contato no servidor.
 document.addEventListener('click',async ev=>{
   const link=ev.target.closest('a[data-cobrar]');
   if(!link||ev.button>0)return;
   const linha=link.closest('[data-assinatura]'),contato=linha&&$('[data-ultimo-contato]',linha);
   const r=await chamar('POST',`/api/assinaturas/${encodeURIComponent(link.dataset.cobrar)}/contatos`,{});
-  if(!r.ok)return avisar(`A mensagem abriu no WhatsApp, mas o contato não foi registrado: ${r.erro}`,{erro:true,foco:false});
+  if(!r.ok)return avisar(`A simulação da mensagem abriu, mas o contato não foi registrado: ${r.erro}`,{erro:true,foco:false});
   const lembrete=r.dados?.tipo==='lembrete';
   if(linha?.parentElement?.matches('[data-lembrar]'))return saiDoLembrar(linha);
   if(contato)contato.textContent=`${lembrete?'Lembrado':'Cobrado'} agora${r.dados?.por?.nome?` por ${r.dados.por.nome}`:''}`;
