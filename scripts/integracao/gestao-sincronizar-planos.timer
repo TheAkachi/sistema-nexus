@@ -1,0 +1,11 @@
+[Unit]
+Description=Gestao Nexus: limpeza e conferencia dos planos no site todo dia as 05:00 de Sao Paulo
+
+[Timer]
+# O relógio da VPS está em UTC: o fuso vai na própria linha (systemd 235 ou mais novo).
+OnCalendar=*-*-* 05:00:00 America/Sao_Paulo
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

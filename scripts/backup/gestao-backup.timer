@@ -1,0 +1,11 @@
+[Unit]
+Description=Gestao Nexus: backup diario as 04:00 de Sao Paulo
+
+[Timer]
+OnCalendar=*-*-* 04:00:00 America/Sao_Paulo
+RandomizedDelaySec=5min
+Persistent=true
+Unit=gestao-backup.service
+
+[Install]
+WantedBy=timers.target

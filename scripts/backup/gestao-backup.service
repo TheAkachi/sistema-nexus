@@ -1,0 +1,22 @@
+[Unit]
+Description=Gestao Nexus: backup cifrado, restauracao isolada e copia externa
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+EnvironmentFile=/etc/nexus-backup/backup.conf
+LoadCredential=passphrase:/etc/nexus-backup/passphrase
+ExecStart=/usr/bin/bash /opt/sistema-nexus/scripts/backup/executar.sh
+TimeoutStartSec=30min
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/backups/sistema-nexus
+
+# Acesso ao Docker equivale a acesso administrativo. Instalar somente apos revisar o pacote.
+# O resultado e o codigo de saida ficam no journal; monitorar falhas e ausencia de execucao.

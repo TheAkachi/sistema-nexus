@@ -1,0 +1,74 @@
+# Modelo do /docker/sistema-nexus/docker-compose.yml da VPS (homologação), igual ao que está publicado.
+# O código fica em /opt/sistema-nexus, atualizado pelo sistema-nexus-deploy.timer a cada commit novo da main. As
+# migrações rodam na subida do app.
+# - db: PostgreSQL 17 próprio, com banco e usuário "gestao", sem porta exposta e sem acesso ao banco do site.
+# - app: sem root (Dockerfile). Só o Traefik publica. Ele roda com network_mode: host e acha o app pelos labels, pela rede
+#   própria da gestão (traefik.docker.network).
+# - .env (chmod 600, ao lado deste arquivo): GESTAO_HOST, POSTGRES_PASSWORD, TOTP_KEY, INTEGRACAO_CHAVE_ID,
+#   INTEGRACAO_CHAVE e SITE_API_URL, gerados na VPS (contrato, seção 11). A INTEGRACAO_CHAVE é a mesma do
+#   INTEGRACAO_CHAVES do .env do site.
+# - Integração com o site (ligada em 22/10/2026): o app entra também na rede do site (nexus_default) e chama
+#   SITE_API_URL=http://nexus-app-1:4183, pelo nome do contêiner, porque os dois projetos têm um serviço "app".
+#   O Traefik do site não roteia /api/integracao (docs/OPERACAO.md do nexus).
+# - O banco também vai pelo nome do contêiner (sistema-nexus-db-1): na rede do site, "db" é o banco do site, e com o
+#   nome curto a gestão tentaria entrar nele (o banco do site recusa a senha da gestão).
+# - Backup diário: desligado. Precisa ser ligado antes de qualquer dado real.
+name: sistema-nexus
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gestao
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: gestao
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gestao -d gestao"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: /opt/sistema-nexus
+    image: sistema-nexus:local
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "4184"
+      PUBLIC_ORIGIN: https://${GESTAO_HOST}
+      DATABASE_URL: postgresql://gestao:${POSTGRES_PASSWORD}@sistema-nexus-db-1:5432/gestao
+      TOTP_KEY: ${TOTP_KEY}
+      SITE_PUBLIC_ORIGIN: https://nexus.demo
+      SITE_API_URL: ${SITE_API_URL}
+      INTEGRACAO_CHAVE_ID: ${INTEGRACAO_CHAVE_ID}
+      INTEGRACAO_CHAVE: ${INTEGRACAO_CHAVE}
+    networks:
+      - default
+      - site
+    healthcheck:
+      # http.get em vez de fetch: o fetch recusa as portas da lista de bloqueadas, como a 4190 das primeiras versões.
+      test: ["CMD", "node", "-e", "require(\"http\").get(\"http://127.0.0.1:4184/health/ready\",r=>process.exit(r.statusCode===200?0:1)).on(\"error\",()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=sistema-nexus_default
+      - traefik.http.routers.sistema-nexus.rule=Host(`${GESTAO_HOST}`)
+      - traefik.http.routers.sistema-nexus.entrypoints=websecure
+      - traefik.http.routers.sistema-nexus.tls.certresolver=letsencrypt
+      - traefik.http.services.sistema-nexus.loadbalancer.server.port=4184
+
+volumes:
+  db-data:
+
+networks:
+  site:
+    external: true
+    name: nexus_default

@@ -1,0 +1,15 @@
+# Rotina diária da gestão (contrato 9.3 e 10): limpa o que venceu (prévias de importação, links, sessões e limites), confere
+# o plano das empresas no site, corrige as divergências e envia a fila.
+# Instalação (root, na VPS): copiar este arquivo e o .timer para /etc/systemd/system/, depois
+#   systemctl daemon-reload && systemctl enable --now gestao-sincronizar-planos.timer
+# O log fica em journalctl -u gestao-sincronizar-planos. Instalado na VPS da homologação em 22/10/2026. As cópias em
+# /etc/systemd/system/ não acompanham o deploy: se este arquivo ou o .timer mudar, copiar de novo e rodar o daemon-reload.
+[Unit]
+Description=Gestao Nexus: conferencia diaria dos planos no site
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker compose -f /docker/sistema-nexus/docker-compose.yml exec -T app node api/cli.mjs limpar
+ExecStart=/usr/bin/docker compose -f /docker/sistema-nexus/docker-compose.yml exec -T app node api/cli.mjs sincronizar-planos --aplicar

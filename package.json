@@ -1,0 +1,28 @@
+{
+  "name": "sistema-nexus",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Gestão comercial do Nexus: clientes, assinaturas, pagamentos e renovações, renderizada no servidor, com dados (api/data) separados das views (api/views)",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node api/server.mjs",
+    "db:migrate": "node api/cli.mjs migrate",
+    "db:seed": "node api/cli.mjs seed",
+    "backup": "node api/cli.mjs backup",
+    "test": "node --test --test-concurrency=1 \"tests/**/*.test.mjs\"",
+    "audit": "node scripts/auditar.mjs",
+    "check": "node scripts/syntax-check.mjs && node scripts/auditar.mjs && node --test --test-concurrency=1 \"tests/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "pg": "8.23.0",
+    "uqr": "0.1.3"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.16",
+    "jsqr": "1.4.0"
+  },
+  "packageManager": "pnpm@11.25.0"
+}

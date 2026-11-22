@@ -1,0 +1,12 @@
+# Variaveis do systemd EnvironmentFile. Sem segredos neste arquivo.
+COMPOSE_FILE=/docker/sistema-nexus/docker-compose.yml
+BACKUP_DIR=/var/backups/sistema-nexus
+RETENTION_DAYS=30
+# Destino fora da VPS. Criar a pasta remota com permissao 700 previamente.
+OFFSITE_HOST=backup@servidor-externo.exemplo
+OFFSITE_DIR=/srv/backups/nexus
+SSH_KEY=/etc/nexus-backup/id_ed25519
+SSH_KNOWN_HOSTS=/etc/nexus-backup/known_hosts
+# Baixar/verificar previamente esta imagem; a rotina nao faz pull.
+RESTORE_POSTGRES_IMAGE=postgres:17-alpine
+RESTORE_TMPFS_SIZE=1g

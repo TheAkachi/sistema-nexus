@@ -1,0 +1,6 @@
+/* Sem JavaScript, a gaveta não abre: abaixo de 1024 px o menu aparece no fim da casca, como uma lista comum. */
+@media (max-width:1023.98px){
+  .menu-botao,.menu-topo{display:none!important}
+  .casca{display:flex;flex-direction:column-reverse;gap:28px}
+  .menu{position:static;width:auto;padding:16px;transform:none;visibility:visible;border:1px solid var(--linha);border-radius:var(--r-superficie);box-shadow:none}
+}

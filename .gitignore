@@ -1,0 +1,11 @@
+node_modules/
+.runtime/
+backups/
+.env
+.env.*
+!.env.example
+*.log
+*.dump
+# Planilhas e exportações reais nunca entram no repositório; só as cópias anonimizadas dos testes.
+*.csv
+!tests/fixtures/*.csv

@@ -1,0 +1,6 @@
+Empresa;Cliente;Responsável;E-mail;WhatsApp;Plano;Valor mensal;Periodicidade;Data de início;Vencimento;Situação
+Auto Peças Iguaçu;Auto Peças Iguaçu Ltda;João Exemplo;joao@exemplo.test;(21) 90000-0003;Premium;R$ 99,00;Mensal;05/10/2026;05/11/2026;Ativo
+Padaria Pão Dourado;;Carlos Exemplo;carlos@exemplo.test;;Avançado;180,00;Trimestral;24/07/2026;;Ativo
+Loja Sem Valor;;;;;Premium;;Mensal;01/10/2026;01/11/2026;Ativo
+Mercado Bom Preço;;;;;Premium;"1.250,00";Anual;2026-13-01;;Ativo
+Studio Bella;Studio Bella;Bela Exemplo;bela@exemplo.test;21900000004;Avançado;67;Semestral;2026-09-01;;Suspenso
