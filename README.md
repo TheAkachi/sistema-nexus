@@ -1,6 +1,6 @@
 # Sistema Nexus · Gestão Comercial & Administrativa
 
-> **Projeto demonstrativo de portfólio Full Stack** desenvolvido por [Pedro Siqueira](https://www.linkedin.com/in/pedro-akachi) (com apoio de IA durante o desenvolvimento). É o sistema administrativo e comercial que acompanha o guia gastronômico e cultural [Nexus](https://github.com/pedroxsst/nexus). Todos os clientes, contratos, valores, cobranças, métricas e contas de equipe são demonstrativos para avaliação da aplicação.
+> **Projeto demonstrativo de portfólio Full Stack** desenvolvido por [Pedro Siqueira](https://www.linkedin.com/in/pedro-akachi) (com apoio de IA durante o desenvolvimento). É o sistema administrativo e comercial que acompanha o guia gastronômico e cultural [Nexus](https://github.com/TheAkachi/nexus). Todos os clientes, contratos, valores, cobranças, métricas e contas de equipe são demonstrativos para avaliação da aplicação.
 
 O **Sistema Nexus** é uma aplicação web Full Stack renderizada no servidor (SSR) em **Node.js 22+ nativo** e **PostgreSQL / PGlite**, construída para gerenciar a carteira comercial do guia Nexus: clientes, assinaturas, vencimentos, pagamentos, fila de renovações com régua de lembretes, interessados (leads), indicadores financeiros/audiência, importação CSV, equipe com RBAC e trilha de auditoria.
 
